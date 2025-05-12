@@ -4,6 +4,9 @@ import org.multicoder.pollbot.gui.Screen;
 import org.multicoder.pollbot.twitch.Config;
 import org.multicoder.pollbot.twitch.Connection;
 
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
+
 public class Main
 {
     //  Helper Classes

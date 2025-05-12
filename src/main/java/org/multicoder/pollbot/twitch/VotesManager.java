@@ -22,7 +22,10 @@ public class VotesManager
                 count_vote(Option,Username);
             }
         }
-        catch(Exception ignored){}
+        catch(Exception ignored)
+        {
+            System.out.println(ignored.getMessage());
+        }
 
     }
     private static void count_vote(int Selection, String Username)
@@ -42,11 +45,7 @@ public class VotesManager
     }
     public static void FetchWinner()
     {
-        int Index = Votes.stream().max(Comparator.naturalOrder()).orElse(-1);
-        if(Index == -1){
-            JOptionPane.showMessageDialog(Main.screen.Votes, "No winner!", "Error", JOptionPane.ERROR_MESSAGE);
-        }
-        Index -= 1;
+        int Index = Votes.indexOf(Votes.stream().max(Comparator.naturalOrder()).get());
         String Winner = Main.screen.Votes.getItem(Index);
         Winner = Winner.split(",")[0];
         JOptionPane.showMessageDialog(Main.screen, Winner,"Results",JOptionPane.INFORMATION_MESSAGE);

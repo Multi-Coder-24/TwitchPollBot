@@ -124,6 +124,8 @@ public class Screen extends Frame implements ActionListener
         {
             Votes.removeAll();
             DurationField.setText("0");
+            VotesManager.Votes.clear();
+            VotesManager.Voted_Users.clear();
         }
         //  Loads Preset1 from the config and populates votes list
         else if(e.getSource() == Preset1)
@@ -133,6 +135,7 @@ public class Screen extends Frame implements ActionListener
             for(String Option : Preset1List)
             {
                 Votes.add(Option + ", 0");
+                VotesManager.Votes.add(0);
             }
         }
         //  Loads Preset2 from the config and populates votes list
@@ -143,6 +146,7 @@ public class Screen extends Frame implements ActionListener
             for(String Option : Preset2List)
             {
                 Votes.add(Option + ", 0");
+                VotesManager.Votes.add(0);
             }
         }
         //  Loads Preset3 from the config and populates votes list
@@ -153,6 +157,7 @@ public class Screen extends Frame implements ActionListener
             for(String Option : Preset3List)
             {
                 Votes.add(Option + ", 0");
+                VotesManager.Votes.add(0);
             }
         }
 
@@ -176,6 +181,7 @@ public class Screen extends Frame implements ActionListener
                 Main.screen.remainingSecondsLabel.setText("0s");
                 Main.screen.VoteRunning = false;
                 VotesManager.FetchWinner();
+                Main.screen.timer = new Timer();
             }
 
         }
@@ -190,7 +196,8 @@ public class Screen extends Frame implements ActionListener
             {
                 String Message = channelMessageEvent.getMessage();
                 String Username = channelMessageEvent.getUser().getName();
-                if(Message.startsWith("!vote")){
+                if(Message.startsWith("!vote"))
+                {
                     VotesManager.vote_trigger(Message,Username);
                 }
             }
