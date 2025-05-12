@@ -1,0 +1,25 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+}
+
+group = 'org.multicoder'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation("com.github.twitch4j:twitch4j:1.24.0")
+    implementation("commons-configuration:commons-configuration:20030311.152757")
+    implementation("ch.qos.logback:logback-classic:1.5.13")
+    implementation("com.electronwill.night-config:toml:3.6.6")
+}
+jar{
+    manifest {
+        attributes(
+                "Main-Class":"org.multicoder.pollbot.Main"
+        )
+    }
+}
