@@ -12,21 +12,24 @@ import javax.swing.*;
 
 public class Connection
 {
+    public TwitchClient client;
+    public TwitchChat chat;
     //  Main Constructor
     public Connection()
     {
         try{
             //  Creates the twitch bot Client using the provided values from config
-            TwitchClient client = TwitchClientBuilder.builder().withUserAgent("TwitchPollBot. By Multicoder").withChatAccount(new OAuth2Credential("twitch",Main.config.ClientSecret)).withClientId(Main.config.ClientID).withEnableChat(true).build();
+            client = TwitchClientBuilder.builder().withUserAgent("TwitchPollBot. By Multicoder").withChatAccount(new OAuth2Credential("twitch",Main.config.ClientSecret)).withClientId(Main.config.ClientID).withEnableChat(true).build();
             //  Gets the users twitch chat
-            TwitchChat chat = client.getChat();
+            chat = client.getChat();
             //  Connects to the users twitch chat
             chat.connect();
             //  Sends a ready message in the twitch chat
             chat.sendMessage(Main.config.ChannelName,"TwitchPollBot Connected");
             //  Adds the Message Handler from Screen into the twitch bot event manager
             chat.getEventManager().onEvent(ChannelMessageEvent.class, Screen.MessageEvents::ChatMessage);
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             JOptionPane.showMessageDialog(Main.screen.Votes,e.getMessage(),"Critical Error",JOptionPane.ERROR_MESSAGE);
         }
 

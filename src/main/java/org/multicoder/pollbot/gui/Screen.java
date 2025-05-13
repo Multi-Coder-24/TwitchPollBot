@@ -3,6 +3,8 @@ package org.multicoder.pollbot.gui;
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent;
 import org.multicoder.pollbot.Main;
 import org.multicoder.pollbot.twitch.VotesManager;
+
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,18 +17,19 @@ public class Screen extends Frame implements ActionListener
 {
     //  Component Properties
     public List Votes = new List();
-    public Label optionLabel = new Label("Name:");
-    public TextField OptionField = new TextField();
     public Button AddOptionButton = new Button("Add Option");
     public Button StartButton = new Button("Start");
-    public TextField DurationField = new TextField("0");
-    public Label durationLabel = new Label("Duration:");
-    public Label remainingLabel = new Label("Remaining:");
-    public Label remainingSecondsLabel = new Label("0s");
     public Button ResetButton = new Button("Reset");
     public Button Preset1 = new Button("Preset 1");
     public Button Preset2 = new Button("Preset 2");
     public Button Preset3 = new Button("Preset 3");
+    public TextField DurationField = new TextField("0");
+    public TextField OptionField = new TextField();
+    public Label votesLabel = new Label("Votes");
+    public Label optionLabel = new Label("Name:");
+    public Label durationLabel = new Label("Duration:");
+    public Label remainingLabel = new Label("Remaining:");
+    public Label remainingSecondsLabel = new Label("0s");
 
     //  Non Component Properties
     public Timer timer = new Timer();
@@ -35,13 +38,25 @@ public class Screen extends Frame implements ActionListener
 
 
     //  Main Constructor
-    public Screen()
+    public Screen() throws Exception
     {
         super("Twitch Poll Bot");
-        setSize(650,500);
+        setIconImage(ImageIO.read(Main.ICON));
+        setSize(750,450);
         setLayout(null);
         setFont(new Font("Arial",Font.PLAIN,16));
-        addWindowListener(new WindowAdapter() {@Override public void windowClosing(WindowEvent e) {super.windowClosing(e);System.exit(0);}});
+        addWindowListener(new WindowAdapter()
+        {
+            @Override public void windowClosing(WindowEvent e)
+            {
+                super.windowClosing(e);
+                //  Closes the twitch api before closing
+                Main.connection.chat.disconnect();
+                Main.connection.chat.close();
+                Main.connection.client.close();
+                System.exit(0);
+            }
+        });
         SetupComponents();
         setResizable(false);
         setVisible(true);
@@ -49,19 +64,20 @@ public class Screen extends Frame implements ActionListener
     //  Helper method that sets the bounds and calls the other 2 helpers
     private void SetupComponents()
     {
-        Votes.setBounds(300,50,300,400);
-        optionLabel.setBounds(10,50,75,25);
-        OptionField.setBounds(90,50,100,25);
-        AddOptionButton.setBounds(10,90,100,25);
+        Votes.setBounds(425,120,300,300);
+        votesLabel.setBounds(550,50,75,100);
+        optionLabel.setBounds(10,100,50,25);
+        OptionField.setBounds(90,100,100,25);
+        AddOptionButton.setBounds(195,100,100,25);
         durationLabel.setBounds(10,150,75,25);
         DurationField.setBounds(90,150,100,25);
-        StartButton.setBounds(10,200,100,25);
-        remainingLabel.setBounds(10,300,75,25);
-        remainingSecondsLabel.setBounds(90,300,100,25);
-        ResetButton.setBounds(10,350,100,25);
-        Preset1.setBounds(10,460,100,25);
-        Preset2.setBounds(120,460,100,25);
-        Preset3.setBounds(240,460,100,25);
+        StartButton.setBounds(195,150,100,25);
+        ResetButton.setBounds(300,150,100,25);
+        remainingLabel.setBounds(90,180,75,25);
+        remainingSecondsLabel.setBounds(170,180,75,25);
+        Preset1.setBounds(10,210,100,25);
+        Preset2.setBounds(115,210,100,25);
+        Preset3.setBounds(220,210,100,25);
         AddListeners();
         AddComponents();
     }
@@ -78,6 +94,7 @@ public class Screen extends Frame implements ActionListener
     private void AddComponents()
     {
         add(Votes);
+        add(votesLabel);
         add(optionLabel);
         add(OptionField);
         add(AddOptionButton);
@@ -96,71 +113,7 @@ public class Screen extends Frame implements ActionListener
     @Override
     public void actionPerformed(ActionEvent e)
     {
-        // Add Option To List
-        if(e.getSource() == AddOptionButton)
-        {
-            if(OptionField.getText().isEmpty()){
-                return;
-            }
-            VotesManager.Votes.add(0);
-            Votes.add(OptionField.getText() + ", 0");
-            OptionField.setText("");
-        }
-        //  Run The Poll For The Specified Duration
-        else if(e.getSource() == StartButton)
-        {
-            //  Ensures the duration field has valid data, disregards if otherwise
-            try{
-                int delay = Integer.parseInt(DurationField.getText());
-                Delay = delay;
-                remainingSecondsLabel.setText(delay + "s");
-                VoteRunning = true;
-                timer.scheduleAtFixedRate(new TimerTick(),0L,1000L);
-            }
-            catch(NumberFormatException ignored){}
-        }
-        //  Reset the poll and duration field
-        else if(e.getSource() == ResetButton)
-        {
-            Votes.removeAll();
-            DurationField.setText("0");
-            VotesManager.Votes.clear();
-            VotesManager.Voted_Users.clear();
-        }
-        //  Loads Preset1 from the config and populates votes list
-        else if(e.getSource() == Preset1)
-        {
-            String Preset1CSV = Main.config.Preset1;
-            String[] Preset1List = Preset1CSV.split(",");
-            for(String Option : Preset1List)
-            {
-                Votes.add(Option + ", 0");
-                VotesManager.Votes.add(0);
-            }
-        }
-        //  Loads Preset2 from the config and populates votes list
-        else if(e.getSource() == Preset2)
-        {
-            String Preset2CSV = Main.config.Preset2;
-            String[] Preset2List = Preset2CSV.split(",");
-            for(String Option : Preset2List)
-            {
-                Votes.add(Option + ", 0");
-                VotesManager.Votes.add(0);
-            }
-        }
-        //  Loads Preset3 from the config and populates votes list
-        else if(e.getSource() == Preset3)
-        {
-            String Preset3CSV = Main.config.Preset3;
-            String[] Preset3List = Preset3CSV.split(",");
-            for(String Option : Preset3List)
-            {
-                Votes.add(Option + ", 0");
-                VotesManager.Votes.add(0);
-            }
-        }
-
+        ActionManager.HandleAction(e);
     }
 
     //  Timer Task responsible for the duration and handles the result fetching from the list
@@ -177,6 +130,7 @@ public class Screen extends Frame implements ActionListener
             }
             else
             {
+                Main.connection.chat.sendMessage(Main.config.ChannelName,"The Poll Has Ended\nThe Winning Option will be announced");
                 Main.screen.timer.cancel();
                 Main.screen.remainingSecondsLabel.setText("0s");
                 Main.screen.VoteRunning = false;
