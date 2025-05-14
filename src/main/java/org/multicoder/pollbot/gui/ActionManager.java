@@ -3,6 +3,7 @@ package org.multicoder.pollbot.gui;
 import org.multicoder.pollbot.Main;
 import org.multicoder.pollbot.twitch.VotesManager;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 public class ActionManager
@@ -33,13 +34,13 @@ public class ActionManager
                 break;
             // Add Option To List
             case "Add Option":
-                if(Main.screen.OptionField.getText().isEmpty())
+                if(Main.screen.NameField.getText().isEmpty())
                 {
                     return;
                 }
                 VotesManager.Votes.add(0);
-                Main.screen.Votes.add(Main.screen.OptionField.getText() + ", 0");
-                Main.screen.OptionField.setText("");
+                Main.screen.Votes.add(Main.screen.NameField.getText() + ", 0");
+                Main.screen.NameField.setText("");
                 break;
             //  Loads Preset1 from the config and populates votes list
             case "Preset 1":
@@ -71,6 +72,16 @@ public class ActionManager
                     VotesManager.Votes.add(0);
                 }
                 break;
+            case "Generate Random":
+
+                try{
+                    int Min = 1;
+                    int Max = Integer.parseInt(Main.screen.randomMaxField.getText());
+                    int Value = Main.screen.RNG.nextInt(Min,Max + 1);
+                    JOptionPane.showMessageDialog(null,"Random Value Is: " + Value,"Random Number",JOptionPane.INFORMATION_MESSAGE);
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null,e.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
+                }
             default:
                 break;
         }

@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -23,18 +24,25 @@ public class Screen extends Frame implements ActionListener
     public Button Preset1 = new Button("Preset 1");
     public Button Preset2 = new Button("Preset 2");
     public Button Preset3 = new Button("Preset 3");
+    public Button RandomButton = new Button("Generate Random");
     public TextField DurationField = new TextField("0");
-    public TextField OptionField = new TextField();
+    public TextField NameField = new TextField();
+    public TextField randomMaxField = new TextField();
     public Label votesLabel = new Label("Votes");
-    public Label optionLabel = new Label("Name:");
+    public Label nameLabel = new Label("Name:");
     public Label durationLabel = new Label("Duration:");
     public Label remainingLabel = new Label("Remaining:");
     public Label remainingSecondsLabel = new Label("0s");
+    public Label controlsLabel = new Label("Poll Controls");
+    public Label randomLabel = new Label("RNG Controls");
+    public Label randomMinLabel = new Label("From: 1");
+    public Label randomMaxLabel = new Label("To");
 
     //  Non Component Properties
     public Timer timer = new Timer();
     public int Delay = 0;
     public boolean VoteRunning = false;
+    public Random RNG;
 
 
     //  Main Constructor
@@ -51,6 +59,7 @@ public class Screen extends Frame implements ActionListener
             {
                 super.windowClosing(e);
                 //  Closes the twitch api before closing
+                Main.connection.chat.sendMessage(Main.config.ChannelName,"TwitchPollBot is disconnecting");
                 Main.connection.chat.disconnect();
                 Main.connection.chat.close();
                 Main.connection.client.close();
@@ -58,6 +67,7 @@ public class Screen extends Frame implements ActionListener
             }
         });
         SetupComponents();
+        RNG = new Random();
         setResizable(false);
         setVisible(true);
     }
@@ -66,18 +76,24 @@ public class Screen extends Frame implements ActionListener
     {
         Votes.setBounds(425,120,300,300);
         votesLabel.setBounds(550,50,75,100);
-        optionLabel.setBounds(10,100,50,25);
-        OptionField.setBounds(90,100,100,25);
-        AddOptionButton.setBounds(195,100,100,25);
-        durationLabel.setBounds(10,150,75,25);
-        DurationField.setBounds(90,150,100,25);
-        StartButton.setBounds(195,150,100,25);
-        ResetButton.setBounds(300,150,100,25);
-        remainingLabel.setBounds(90,180,75,25);
-        remainingSecondsLabel.setBounds(170,180,75,25);
-        Preset1.setBounds(10,210,100,25);
-        Preset2.setBounds(115,210,100,25);
-        Preset3.setBounds(220,210,100,25);
+        nameLabel.setBounds(10,70,50,25);
+        NameField.setBounds(90,70,100,25);
+        AddOptionButton.setBounds(195,70,100,25);
+        durationLabel.setBounds(10,110,75,25);
+        DurationField.setBounds(90,110,100,25);
+        StartButton.setBounds(195,110,100,25);
+        ResetButton.setBounds(300,110,100,25);
+        remainingLabel.setBounds(85,150,75,25);
+        remainingSecondsLabel.setBounds(170,150,75,25);
+        Preset1.setBounds(10,190,100,25);
+        Preset2.setBounds(115,190,100,25);
+        Preset3.setBounds(220,190,100,25);
+        controlsLabel.setBounds(100,30,100,25);
+        randomLabel.setBounds(100,230,100,25);
+        randomMinLabel.setBounds(10,270,100,25);
+        randomMaxLabel.setBounds(10,310,40,25);
+        randomMaxField.setBounds(60,310,100,25);
+        RandomButton.setBounds(10,350,150,25);
         AddListeners();
         AddComponents();
     }
@@ -89,14 +105,15 @@ public class Screen extends Frame implements ActionListener
         Preset1.addActionListener(this);
         Preset2.addActionListener(this);
         Preset3.addActionListener(this);
+        RandomButton.addActionListener(this);
     }
     //  Helper method that adds all components
     private void AddComponents()
     {
         add(Votes);
         add(votesLabel);
-        add(optionLabel);
-        add(OptionField);
+        add(nameLabel);
+        add(NameField);
         add(AddOptionButton);
         add(StartButton);
         add(DurationField);
@@ -107,6 +124,12 @@ public class Screen extends Frame implements ActionListener
         add(Preset1);
         add(Preset2);
         add(Preset3);
+        add(controlsLabel);
+        add(randomLabel);
+        add(randomMinLabel);
+        add(randomMaxLabel);
+        add(randomMaxField);
+        add(RandomButton);
     }
 
     //  Button Handler
