@@ -5,6 +5,7 @@ import org.multicoder.pollbot.Main;
 import org.multicoder.pollbot.twitch.VotesManager;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,29 +15,30 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class Screen extends Frame implements ActionListener
+public class Screen extends JFrame implements ActionListener
 {
     //  Component Properties
-    public List Votes = new List();
-    public Button AddOptionButton = new Button("Add Option");
-    public Button StartButton = new Button("Start");
-    public Button ResetButton = new Button("Reset");
-    public Button Preset1 = new Button("Preset 1");
-    public Button Preset2 = new Button("Preset 2");
-    public Button Preset3 = new Button("Preset 3");
-    public Button RandomButton = new Button("Generate Random");
-    public TextField DurationField = new TextField("0");
-    public TextField NameField = new TextField();
-    public TextField randomMaxField = new TextField();
-    public Label votesLabel = new Label("Votes");
-    public Label nameLabel = new Label("Name:");
-    public Label durationLabel = new Label("Duration:");
-    public Label remainingLabel = new Label("Remaining:");
-    public Label remainingSecondsLabel = new Label("0s");
-    public Label controlsLabel = new Label("Poll Controls");
-    public Label randomLabel = new Label("RNG Controls");
-    public Label randomMinLabel = new Label("From: 1");
-    public Label randomMaxLabel = new Label("To");
+    public DefaultListModel<String> Votes = new DefaultListModel<>();
+    public JList<String> VoteList = new JList<>(Votes);
+    public JButton AddOptionButton = new JButton("Add Option");
+    public JButton StartButton = new JButton("Start");
+    public JButton ResetButton = new JButton("Reset");
+    public JButton Preset1 = new JButton("Preset 1");
+    public JButton Preset2 = new JButton("Preset 2");
+    public JButton Preset3 = new JButton("Preset 3");
+    public JButton RandomButton = new JButton("Generate Random");
+    public JTextField DurationField = new JTextField("0");
+    public JTextField NameField = new JTextField();
+    public JTextField randomMaxField = new JTextField();
+    public JLabel votesLabel = new JLabel("Votes");
+    public JLabel nameLabel = new JLabel("Name:");
+    public JLabel durationLabel = new JLabel("Duration:");
+    public JLabel remainingLabel = new JLabel("Remaining:");
+    public JLabel remainingSecondsLabel = new JLabel("0s");
+    public JLabel controlsLabel = new JLabel("Poll Controls");
+    public JLabel randomLabel = new JLabel("RNG Controls");
+    public JLabel randomMinLabel = new JLabel("From: 1");
+    public JLabel randomMaxLabel = new JLabel("To");
 
     //  Non Component Properties
     public Timer timer = new Timer();
@@ -74,8 +76,8 @@ public class Screen extends Frame implements ActionListener
     //  Helper method that sets the bounds and calls the other 2 helpers
     private void SetupComponents()
     {
-        Votes.setBounds(425,120,300,300);
-        votesLabel.setBounds(550,50,75,100);
+        VoteList.setBounds(425,100,300,300);
+        votesLabel.setBounds(550,0,75,100);
         nameLabel.setBounds(10,70,50,25);
         NameField.setBounds(90,70,100,25);
         AddOptionButton.setBounds(195,70,100,25);
@@ -110,7 +112,7 @@ public class Screen extends Frame implements ActionListener
     //  Helper method that adds all components
     private void AddComponents()
     {
-        add(Votes);
+        add(VoteList);
         add(votesLabel);
         add(nameLabel);
         add(NameField);

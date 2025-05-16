@@ -30,7 +30,7 @@ public class Connection
             chat.getEventManager().onEvent(ChannelMessageEvent.class, Screen.MessageEvents::ChatMessage);
         } catch (Exception e)
         {
-            JOptionPane.showMessageDialog(Main.screen.Votes,e.getMessage(),"Critical Error",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null,e.getMessage(),"Critical Error",JOptionPane.ERROR_MESSAGE);
         }
 
     }

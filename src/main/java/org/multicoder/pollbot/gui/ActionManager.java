@@ -5,6 +5,7 @@ import org.multicoder.pollbot.twitch.VotesManager;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.util.Locale;
 
 public class ActionManager
 {
@@ -27,7 +28,7 @@ public class ActionManager
                 catch(NumberFormatException ignored){break;}
             //  Reset the poll and duration field
             case "Reset":
-                Main.screen.Votes.removeAll();
+                Main.screen.Votes.clear();
                 Main.screen.DurationField.setText("0");
                 VotesManager.Votes.clear();
                 VotesManager.Voted_Users.clear();
@@ -39,8 +40,10 @@ public class ActionManager
                     return;
                 }
                 VotesManager.Votes.add(0);
-                Main.screen.Votes.add(Main.screen.NameField.getText() + ", 0");
+                DefaultListModel<String> model = Main.screen.Votes;
+                model.addElement(Main.screen.NameField.getText() + ", 0");
                 Main.screen.NameField.setText("");
+                VotesManager.Options.add(Main.screen.NameField.getText().toLowerCase(Locale.ROOT));
                 break;
             //  Loads Preset1 from the config and populates votes list
             case "Preset 1":
@@ -48,8 +51,10 @@ public class ActionManager
                 String[] Preset1List = Preset1CSV.split(",");
                 for(String Option : Preset1List)
                 {
-                    Main.screen.Votes.add(Option + ", 0");
+                    DefaultListModel<String> model1 = Main.screen.Votes;
+                    model1.addElement(Option + ", 0");
                     VotesManager.Votes.add(0);
+                    VotesManager.Options.add(Option.toLowerCase(Locale.ROOT));
                 }
                 break;
             //  Loads Preset2 from the config and populates votes list
@@ -58,8 +63,10 @@ public class ActionManager
                 String[] Preset2List = Preset2CSV.split(",");
                 for(String Option : Preset2List)
                 {
-                    Main.screen.Votes.add(Option + ", 0");
+                    DefaultListModel<String> model2 = Main.screen.Votes;
+                    model2.addElement(Option + ", 0");
                     VotesManager.Votes.add(0);
+                    VotesManager.Options.add(Option.toLowerCase(Locale.ROOT));
                 }
                 break;
             //  Loads Preset3 from the config and populates votes list
@@ -68,8 +75,10 @@ public class ActionManager
                 String[] Preset3List = Preset3CSV.split(",");
                 for(String Option : Preset3List)
                 {
-                    Main.screen.Votes.add(Option + ", 0");
+                    DefaultListModel<String> model3 = Main.screen.Votes;
+                    model3.addElement(Option + ", 0");
                     VotesManager.Votes.add(0);
+                    VotesManager.Options.add(Option.toLowerCase(Locale.ROOT));
                 }
                 break;
             case "Generate Random":
