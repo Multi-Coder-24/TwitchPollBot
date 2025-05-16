@@ -15,9 +15,10 @@ public class Config
     public String Preset1;
     public String Preset2;
     public String Preset3;
+    public String votePrefix;
 
     //  Used for simple version checking
-    public final String Version = "1.0.0";
+    public final String Version = "1.1.0";
 
     //  Main Constructor
     public Config()
@@ -35,6 +36,7 @@ public class Config
                 cfg.add("preset_1","One,Two,Three");
                 cfg.add("preset_2","One,Two,Three");
                 cfg.add("preset_3","One,Two,Three");
+                cfg.add("votePrefix","!vote");
                 cfg.add("Version",Version);
                 cfg.save();
                 ChannelName = "changeme";
@@ -43,6 +45,7 @@ public class Config
                 Preset1 = "One,Two,Three";
                 Preset2 = "One,Two,Three";
                 Preset3 = "One,Two,Three";
+                votePrefix = "!vote";
             }
             else
             {
@@ -57,6 +60,7 @@ public class Config
                     Preset1 = cfg.get("preset_1");
                     Preset2 = cfg.get("preset_2");
                     Preset3 = cfg.get("preset_3");
+                    votePrefix = cfg.get("votePrefix");
                 }
                 //  Version is out of date, recreate file
                 else
@@ -68,6 +72,7 @@ public class Config
                     cfg.add("preset_1","One,Two,Three");
                     cfg.add("preset_2","One,Two,Three");
                     cfg.add("preset_3","One,Two,Three");
+                    cfg.add("votePrefix","!vote");
                     cfg.add("Version",Version);
                     cfg.save();
                     ChannelName = "changeme";
@@ -76,6 +81,7 @@ public class Config
                     Preset1 = "One,Two,Three";
                     Preset2 = "One,Two,Three";
                     Preset3 = "One,Two,Three";
+                    votePrefix = "!vote";
                 }
             }
         } catch (Exception e) {

@@ -173,7 +173,7 @@ public class Screen extends Frame implements ActionListener
             {
                 String Message = channelMessageEvent.getMessage();
                 String Username = channelMessageEvent.getUser().getName();
-                if(Message.startsWith("!vote"))
+                if(Message.toLowerCase().startsWith(Main.config.votePrefix))
                 {
                     VotesManager.vote_trigger(Message,Username);
                 }

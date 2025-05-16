@@ -42,17 +42,37 @@ public class VotesManager
     }
     public static void FetchWinner()
     {
-        int Index = Votes.indexOf(Votes.stream().max(Comparator.naturalOrder()).orElse(-1));
-        if(Index != -1)
+        int WinningValue = Votes.stream().max(Comparator.naturalOrder()).orElse(-1);
+        if(WinningValue == -1){return;}
+        List<Integer> WinningVotes = getAllIndexes(Votes,WinningValue);
+        if(WinningVotes.size() == 1)
         {
-            String Winner = Main.screen.Votes.getItem(Index);
+            String Winner = Main.screen.Votes.getItem(WinningVotes.getFirst());
             Winner = Winner.split(",")[0];
             JOptionPane.showMessageDialog(Main.screen, Winner,"Results",JOptionPane.INFORMATION_MESSAGE);
             Main.connection.chat.sendMessage(Main.config.ChannelName,"The Winning Option is " + Winner);
         }
-        else {
-            JOptionPane.showMessageDialog(Main.screen,"Error Has Occurred","Error",JOptionPane.ERROR_MESSAGE);
+        else
+        {
+            StringBuilder Winners = new StringBuilder();
+            Winners.append("Winning Options Are: ");
+            for(int winningIndex : WinningVotes)
+            {
+                Winners.append(Main.screen.Votes.getItem(winningIndex).split(",")[0]);
+                Winners.append(", ");
+            }
+            JOptionPane.showMessageDialog(Main.screen, Winners.toString(),"Results",JOptionPane.INFORMATION_MESSAGE);
+            Main.connection.chat.sendMessage(Main.config.ChannelName,Winners.toString());
         }
+    }
 
+    private static List<Integer> getAllIndexes(List<Integer> list, int target) {
+        List<Integer> indexes = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i) == target) {
+                indexes.add(i);
+            }
+        }
+        return indexes;
     }
 }
