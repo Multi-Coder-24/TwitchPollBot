@@ -25,11 +25,10 @@ public class VotesManager
         {
             try{
                 String Option = message.split(" ",2)[1];
-                System.out.println(Option);
                 int Index = Options.indexOf(Option.toLowerCase(Locale.ROOT));
-                System.out.println("Index: " + Index);
                 if(Index != -1)
                 {
+                    System.out.println(Option);
                     count_vote_indexed(Index,Username);
                 }
             } catch (Exception ignored2) {}
@@ -50,7 +49,8 @@ public class VotesManager
         currentValue++;
         Votes.set(Selection, currentValue);
         Voted_Users.add(Username);
-        post_vote_update_indexed(Selection,currentValue);
+        String Option = Main.screen.Votes.get(Selection).split(",")[0];
+        post_vote_update_indexed(Selection,currentValue,Option);
     }
     private static void post_vote_update(int Selection, int Value)
     {
@@ -60,13 +60,11 @@ public class VotesManager
         Message += ", " + Value;
         model.setElementAt(Message,Selection);
     }
-    private static void post_vote_update_indexed(int Selection, int Value)
+    private static void post_vote_update_indexed(int Selection, int Value,String Option)
     {
-
         DefaultListModel<String> model = Main.screen.Votes;
-        String Message = model.get(Selection).split(",")[0];
-        Message += ", " + Value;
-        model.setElementAt(Message,Selection);
+        String NewValue = Option + ", " + Value;
+        model.set(Selection,NewValue);
     }
     public static void FetchWinner()
     {
@@ -78,7 +76,7 @@ public class VotesManager
         {
             String Winner = model.get(WinningVotes.getFirst());
             Winner = Winner.split(",")[0];
-            JOptionPane.showMessageDialog(Main.screen, Winner,"Results",JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, Winner,"Results",JOptionPane.INFORMATION_MESSAGE);
             Main.connection.chat.sendMessage(Main.config.ChannelName,"The Winning Option is " + Winner);
         }
         else

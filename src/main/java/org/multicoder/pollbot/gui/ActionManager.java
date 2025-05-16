@@ -5,7 +5,6 @@ import org.multicoder.pollbot.twitch.VotesManager;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.util.Locale;
 
 public class ActionManager
 {
@@ -31,6 +30,7 @@ public class ActionManager
                 Main.screen.Votes.clear();
                 Main.screen.DurationField.setText("0");
                 VotesManager.Votes.clear();
+                VotesManager.Options.clear();
                 VotesManager.Voted_Users.clear();
                 break;
             // Add Option To List
@@ -43,7 +43,7 @@ public class ActionManager
                 DefaultListModel<String> model = Main.screen.Votes;
                 model.addElement(Main.screen.NameField.getText() + ", 0");
                 Main.screen.NameField.setText("");
-                VotesManager.Options.add(Main.screen.NameField.getText().toLowerCase(Locale.ROOT));
+                VotesManager.Options.add(Main.screen.NameField.getText().toLowerCase());
                 break;
             //  Loads Preset1 from the config and populates votes list
             case "Preset 1":
@@ -54,7 +54,7 @@ public class ActionManager
                     DefaultListModel<String> model1 = Main.screen.Votes;
                     model1.addElement(Option + ", 0");
                     VotesManager.Votes.add(0);
-                    VotesManager.Options.add(Option.toLowerCase(Locale.ROOT));
+                    VotesManager.Options.add(Option.toLowerCase());
                 }
                 break;
             //  Loads Preset2 from the config and populates votes list
@@ -66,7 +66,7 @@ public class ActionManager
                     DefaultListModel<String> model2 = Main.screen.Votes;
                     model2.addElement(Option + ", 0");
                     VotesManager.Votes.add(0);
-                    VotesManager.Options.add(Option.toLowerCase(Locale.ROOT));
+                    VotesManager.Options.add(Option.toLowerCase());
                 }
                 break;
             //  Loads Preset3 from the config and populates votes list
@@ -78,11 +78,10 @@ public class ActionManager
                     DefaultListModel<String> model3 = Main.screen.Votes;
                     model3.addElement(Option + ", 0");
                     VotesManager.Votes.add(0);
-                    VotesManager.Options.add(Option.toLowerCase(Locale.ROOT));
+                    VotesManager.Options.add(Option.toLowerCase());
                 }
                 break;
             case "Generate Random":
-
                 try{
                     int Min = 1;
                     int Max = Integer.parseInt(Main.screen.randomMaxField.getText());

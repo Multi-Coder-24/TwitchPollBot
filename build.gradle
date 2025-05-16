@@ -1,10 +1,11 @@
 plugins {
     id 'java'
     id 'com.github.johnrengelman.shadow' version '8.1.1'
+    id 'application'
 }
 
 group = 'org.multicoder'
-version = '3.0.0'
+version = '3.0.1'
 
 repositories {
     mavenCentral()
@@ -15,6 +16,9 @@ dependencies {
     implementation("commons-configuration:commons-configuration:20030311.152757")
     implementation("ch.qos.logback:logback-classic:1.5.13")
     implementation("com.electronwill.night-config:toml:3.6.6")
+}
+application {
+    mainClass = "org.multicoder.pollbot.Main"
 }
 jar{
     manifest {
