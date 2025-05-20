@@ -27,6 +27,7 @@ public class Screen extends JFrame implements ActionListener
     public JButton Preset2 = new JButton("Preset 2");
     public JButton Preset3 = new JButton("Preset 3");
     public JButton RandomButton = new JButton("Generate Random");
+    public JButton HowTo = new JButton("Send Instruction Message");
     public JTextField DurationField = new JTextField("0");
     public JTextField NameField = new JTextField();
     public JTextField randomMaxField = new JTextField();
@@ -96,6 +97,7 @@ public class Screen extends JFrame implements ActionListener
         randomMaxLabel.setBounds(10,310,40,25);
         randomMaxField.setBounds(60,310,100,25);
         RandomButton.setBounds(10,350,150,25);
+        HowTo.setBounds(200,350,200,25);
         AddListeners();
         AddComponents();
     }
@@ -108,6 +110,7 @@ public class Screen extends JFrame implements ActionListener
         Preset2.addActionListener(this);
         Preset3.addActionListener(this);
         RandomButton.addActionListener(this);
+        HowTo.addActionListener(this);
     }
     //  Helper method that adds all components
     private void AddComponents()
@@ -132,6 +135,7 @@ public class Screen extends JFrame implements ActionListener
         add(randomMaxLabel);
         add(randomMaxField);
         add(RandomButton);
+        add(HowTo);
     }
 
     //  Button Handler

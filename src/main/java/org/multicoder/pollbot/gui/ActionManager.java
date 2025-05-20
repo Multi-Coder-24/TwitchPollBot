@@ -90,6 +90,9 @@ public class ActionManager
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(null,e.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
                 }
+            case "Send Instruction Message":
+                Main.connection.chat.sendMessage(Main.config.ChannelName,"To vote on the poll please use " + Main.config.votePrefix + " (option name or number)");
+                JOptionPane.showMessageDialog(null,"Message Sent","Action",JOptionPane.INFORMATION_MESSAGE);
             default:
                 break;
         }
