@@ -3,6 +3,7 @@ package org.multicoder.pollbot;
 import org.multicoder.pollbot.gui.Screen;
 import org.multicoder.pollbot.twitch.Config;
 import org.multicoder.pollbot.twitch.Connection;
+import org.multicoder.pollbot.util.UpdateChecker;
 
 import javax.swing.*;
 import java.net.URL;
@@ -13,7 +14,6 @@ public class Main
     public static Config config;
     public static Connection connection;
     public static Screen screen;
-
     //  Prefetched Icon from resources directory
     public static URL ICON;
 
@@ -21,6 +21,8 @@ public class Main
     public static void main(String[] args)
     {
         try{
+            //  Version check against github releases
+            UpdateChecker.CheckForUpdate(System.getProperty("user.home"));
             //  Prefetches the Icon Image before GUI uses it.
             ClassLoader classLoader = Main.class.getClassLoader();
             ICON = classLoader.getResource("icon.png");
