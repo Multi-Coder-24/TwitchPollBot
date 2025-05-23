@@ -62,7 +62,7 @@ public class Screen extends JFrame implements ActionListener
             {
                 super.windowClosing(e);
                 //  Closes the twitch api before closing
-                Main.connection.chat.sendMessage(Main.config.ChannelName,"TwitchPollBot is disconnecting");
+                Main.connection.chat.sendMessage(Main.config.Username,"TwitchPollBot is disconnecting");
                 Main.connection.chat.disconnect();
                 Main.connection.chat.close();
                 Main.connection.client.close();
@@ -159,7 +159,7 @@ public class Screen extends JFrame implements ActionListener
             }
             else
             {
-                Main.connection.chat.sendMessage(Main.config.ChannelName,"The Poll Has Ended\nThe Winning Option will be announced");
+                Main.connection.chat.sendMessage(Main.config.Username,"The Poll Has Ended\nThe Winning Option will be announced");
                 Main.screen.timer.cancel();
                 Main.screen.remainingSecondsLabel.setText("0s");
                 Main.screen.VoteRunning = false;
@@ -179,7 +179,7 @@ public class Screen extends JFrame implements ActionListener
             {
                 String Message = channelMessageEvent.getMessage();
                 String Username = channelMessageEvent.getUser().getName();
-                if(Message.toLowerCase().startsWith(Main.config.votePrefix))
+                if(Message.toLowerCase().startsWith(Main.config.VotePrefix))
                 {
                     VotesManager.vote_trigger(Message,Username);
                 }

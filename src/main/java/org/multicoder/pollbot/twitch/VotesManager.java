@@ -77,7 +77,7 @@ public class VotesManager
             String Winner = model.get(WinningVotes.getFirst());
             Winner = Winner.split(",")[0];
             JOptionPane.showMessageDialog(null, Winner,"Results",JOptionPane.INFORMATION_MESSAGE);
-            Main.connection.chat.sendMessage(Main.config.ChannelName,"The Winning Option is " + Winner);
+            Main.connection.chat.sendMessage(Main.config.Username,"The Winning Option is " + Winner);
         }
         else
         {
@@ -89,7 +89,7 @@ public class VotesManager
                 Winners.append(", ");
             }
             JOptionPane.showMessageDialog(Main.screen, Winners.toString(),"Results",JOptionPane.INFORMATION_MESSAGE);
-            Main.connection.chat.sendMessage(Main.config.ChannelName,Winners.toString());
+            Main.connection.chat.sendMessage(Main.config.Username,Winners.toString());
         }
     }
 

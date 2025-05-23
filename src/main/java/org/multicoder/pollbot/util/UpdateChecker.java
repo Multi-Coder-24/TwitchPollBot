@@ -10,7 +10,7 @@ import java.nio.file.Files;
 
 public class UpdateChecker
 {
-    private static final int Version = 30100;
+    private static final int Version = 40000;
     private static final String GITHUB_RELEASES = "https://github.com/Multi-Coder-24/TwitchPollBot/releases/latest";
     private static final String Splitter = "·";
 

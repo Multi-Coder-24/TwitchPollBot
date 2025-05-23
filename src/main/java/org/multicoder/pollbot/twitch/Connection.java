@@ -19,13 +19,13 @@ public class Connection
     {
         try{
             //  Creates the twitch bot Client using the provided values from config
-            client = TwitchClientBuilder.builder().withUserAgent("TwitchPollBot. By Multicoder").withChatAccount(new OAuth2Credential("twitch",Main.config.ClientSecret)).withClientId(Main.config.ClientID).withEnableChat(true).build();
+            client = TwitchClientBuilder.builder().withUserAgent("TwitchPollBot. By Multicoder").withChatAccount(new OAuth2Credential("twitch",Main.config.AccessToken)).withClientId(Main.config.ClientID).withEnableChat(true).build();
             //  Gets the users twitch chat
             chat = client.getChat();
             //  Connects to the users twitch chat
             chat.connect();
             //  Sends a ready message in the twitch chat
-            chat.sendMessage(Main.config.ChannelName,"TwitchPollBot Connected");
+            chat.sendMessage(Main.config.Username,"TwitchPollBot Connected");
             //  Adds the Message Handler from Screen into the twitch bot event manager
             chat.getEventManager().onEvent(ChannelMessageEvent.class, Screen.MessageEvents::ChatMessage);
         } catch (Exception e)
