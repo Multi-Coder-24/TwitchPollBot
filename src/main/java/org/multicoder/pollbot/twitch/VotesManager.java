@@ -49,26 +49,26 @@ public class VotesManager
         currentValue++;
         Votes.set(Selection, currentValue);
         Voted_Users.add(Username);
-        String Option = Main.screen.Votes.get(Selection).split(",")[0];
+        String Option = Main.screen.MainApp.Votes.get(Selection).split(",")[0];
         post_vote_update_indexed(Selection,currentValue,Option);
     }
     private static void post_vote_update(int Selection, int Value)
     {
 
-        DefaultListModel<String> model = Main.screen.Votes;
+        DefaultListModel<String> model = Main.screen.MainApp.Votes;
         String Message = model.get(Selection - 1).split(",")[0];
         Message += ", " + Value;
         model.setElementAt(Message,Selection);
     }
     private static void post_vote_update_indexed(int Selection, int Value,String Option)
     {
-        DefaultListModel<String> model = Main.screen.Votes;
+        DefaultListModel<String> model = Main.screen.MainApp.Votes;
         String NewValue = Option + ", " + Value;
         model.set(Selection,NewValue);
     }
     public static void FetchWinner()
     {
-        DefaultListModel<String> model = Main.screen.Votes;
+        DefaultListModel<String> model = Main.screen.MainApp.Votes;
         int WinningValue = Votes.stream().max(Comparator.naturalOrder()).orElse(-1);
         if(WinningValue == -1){return;}
         List<Integer> WinningVotes = getAllIndexes(Votes,WinningValue);
@@ -77,7 +77,7 @@ public class VotesManager
             String Winner = model.get(WinningVotes.getFirst());
             Winner = Winner.split(",")[0];
             JOptionPane.showMessageDialog(null, Winner,"Results",JOptionPane.INFORMATION_MESSAGE);
-            Main.connection.chat.sendMessage(Main.config.Username,"The Winning Option is " + Winner);
+            Main.screen.connection.chat.sendMessage(Main.screen.config.Username,"The Winning Option is " + Winner);
         }
         else
         {
@@ -89,7 +89,7 @@ public class VotesManager
                 Winners.append(", ");
             }
             JOptionPane.showMessageDialog(Main.screen, Winners.toString(),"Results",JOptionPane.INFORMATION_MESSAGE);
-            Main.connection.chat.sendMessage(Main.config.Username,Winners.toString());
+            Main.screen.connection.chat.sendMessage(Main.screen.config.Username,Winners.toString());
         }
     }
 

@@ -3,7 +3,6 @@ package org.multicoder.pollbot.config;
 import com.google.gson.*;
 import org.multicoder.pollbot.Main;
 
-import javax.swing.*;
 import java.io.*;
 import java.util.*;
 
@@ -48,7 +47,6 @@ public class JsonConfig
                 try (FileWriter fw = new FileWriter(ConfigFile)) {
                     gson.toJson(Root,fw);
                 }
-                JOptionPane.showMessageDialog(null,"New Blank Configuration Created\nPlease edit the file located at: " + ConfigFile.getAbsolutePath(),"New Config",JOptionPane.INFORMATION_MESSAGE);
                 Username = "changeme";
                 ClientID = "changeme";
                 AccessToken = "changeme";

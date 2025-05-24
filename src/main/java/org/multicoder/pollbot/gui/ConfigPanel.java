@@ -3,14 +3,12 @@ package org.multicoder.pollbot.gui;
 import org.multicoder.pollbot.Main;
 import org.multicoder.pollbot.config.JsonConfig;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 
-public class ConfigScreen extends JFrame implements ActionListener
+public class ConfigPanel extends JPanel implements ActionListener
 {
     JPasswordField AccessToken = new JPasswordField();
     JTextField Username = new JTextField();
@@ -30,19 +28,17 @@ public class ConfigScreen extends JFrame implements ActionListener
     JTextArea Preset3 = new JTextArea();
     JButton Save = new JButton("Save");
     JButton ShowToken = new JButton("Show/Hide Token");
+    JButton StartConnection = new JButton("Start Twitch API");
+    public Screen MainScreen;
 
-    public ConfigScreen() throws IOException {
-        super("Twitch Poll Bot Config");
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setIconImage(ImageIO.read(Main.ICON));
+    public ConfigPanel()
+    {
+        super(null);
         setSize(1150,450);
-        setLayout(null);
         setFont(new Font("Arial",Font.PLAIN,16));
         SetupComponents();
-        setResizable(false);
-        setVisible(true);
+        setVisible(false);
     }
-
     private void SetupComponents()
     {
         Username.setBounds(120,10,200,25);
@@ -63,14 +59,14 @@ public class ConfigScreen extends JFrame implements ActionListener
         Preset3.setBounds(920,50,200,280);
         Preset3Label.setBounds(960,10,150,25);
         Save.setBounds(10,250,100,50);
+        StartConnection.setBounds(150,250,200,50);
         AddListeners();
         AddComponents();
-        LoadConfig();
     }
-    private void LoadConfig()
+    public void LoadConfig()
     {
         AccessToken.setEchoChar((char)0);
-        JsonConfig Config = Main.config;
+        JsonConfig Config = MainScreen.config;
         Username.setText(Config.Username);
         ClientId.setText(Config.ClientID);
         VotePrefix.setText(Config.VotePrefix);
@@ -86,10 +82,13 @@ public class ConfigScreen extends JFrame implements ActionListener
         for(String option : Config.Preset_3) PresetBuilder.append(option).append("\n");
         Preset3.setText(PresetBuilder.toString());
     }
+
+
     private void AddListeners()
     {
         ShowToken.addActionListener(this);
         Save.addActionListener(this);
+        StartConnection.addActionListener(this);
     }
     private void AddComponents()
     {
@@ -111,10 +110,11 @@ public class ConfigScreen extends JFrame implements ActionListener
         add(Preset3);
         add(Preset3Label);
         add(Save);
+        add(StartConnection);
     }
     private void UpdateConfig()
     {
-        JsonConfig Config = Main.config;
+        JsonConfig Config = MainScreen.config;
         Config.Username = Username.getText();
         Config.ClientID = ClientId.getText();
         Config.VotePrefix = VotePrefix.getText();
@@ -137,18 +137,25 @@ public class ConfigScreen extends JFrame implements ActionListener
     @Override
     public void actionPerformed(ActionEvent e)
     {
-        switch (e.getActionCommand()){
-            case "Show/Hide Token":
-                if(AccessToken.getEchoChar() == (char) 0){
-                    AccessToken.setEchoChar('*');
-                }
-                else{
-                    AccessToken.setEchoChar((char)0);
-                }
-                break;
-            case "Save":
-                UpdateConfig();
-                break;
+        if(e.getActionCommand().equals("Show/Hide Token")){
+            if(AccessToken.getEchoChar() == (char) 0){
+                AccessToken.setEchoChar('*');
+            }
+            else{
+                AccessToken.setEchoChar((char)0);
+            }
         }
+        if(e.getActionCommand().equals("Save")){
+            UpdateConfig();
+        }
+        else{
+            MainScreen.actionPerformed(e);
+        }
+    }
+
+    @Override
+    public void doLayout() {
+        super.doLayout();
+        MainScreen = (Screen) getRootPane().getParent();
     }
 }

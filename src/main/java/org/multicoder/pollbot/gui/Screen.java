@@ -2,150 +2,128 @@ package org.multicoder.pollbot.gui;
 
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent;
 import org.multicoder.pollbot.Main;
+import org.multicoder.pollbot.config.JsonConfig;
+import org.multicoder.pollbot.twitch.Connection;
 import org.multicoder.pollbot.twitch.VotesManager;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.util.Random;
+import java.awt.event.*;
+import java.util.*;
 import java.util.Timer;
-import java.util.TimerTask;
+
 
 public class Screen extends JFrame implements ActionListener
 {
-    //  Component Properties
-    public DefaultListModel<String> Votes = new DefaultListModel<>();
-    public JList<String> VoteList = new JList<>(Votes);
-    public JButton AddOptionButton = new JButton("Add Option");
-    public JButton StartButton = new JButton("Start");
-    public JButton ResetButton = new JButton("Reset");
-    public JButton Preset1 = new JButton("Preset 1");
-    public JButton Preset2 = new JButton("Preset 2");
-    public JButton Preset3 = new JButton("Preset 3");
-    public JButton RandomButton = new JButton("Generate Random");
-    public JButton HowTo = new JButton("Send Instruction Message");
-    public JTextField DurationField = new JTextField("0");
-    public JTextField NameField = new JTextField();
-    public JTextField randomMaxField = new JTextField();
-    public JLabel votesLabel = new JLabel("Votes");
-    public JLabel nameLabel = new JLabel("Name:");
-    public JLabel durationLabel = new JLabel("Duration:");
-    public JLabel remainingLabel = new JLabel("Remaining:");
-    public JLabel remainingSecondsLabel = new JLabel("0s");
-    public JLabel controlsLabel = new JLabel("Poll Controls");
-    public JLabel randomLabel = new JLabel("RNG Controls");
-    public JLabel randomMinLabel = new JLabel("From: 1");
-    public JLabel randomMaxLabel = new JLabel("To");
+    //  Components
+    public PollPanel MainApp = new PollPanel();
+    public ConfigPanel ConfigPanel = new ConfigPanel();
+    public JButton Poll = new JButton("Poll");
+    public JButton Config = new JButton("Config");
 
-    //  Non Component Properties
+    //  Non Component
     public Timer timer = new Timer();
     public int Delay = 0;
     public boolean VoteRunning = false;
     public Random RNG;
+    public Connection connection;
+    public JsonConfig config;
 
 
     //  Main Constructor
     public Screen() throws Exception
     {
         super("Twitch Poll Bot");
+        Main.LOG.info("UI Initialization");
         setIconImage(ImageIO.read(Main.ICON));
-        setSize(750,450);
+        setSize(1150,500);
         setLayout(null);
         setFont(new Font("Arial",Font.PLAIN,16));
+        Main.LOG.info("Adding Shutdown Hook");
         addWindowListener(new WindowAdapter()
         {
             @Override public void windowClosing(WindowEvent e)
             {
                 super.windowClosing(e);
                 //  Closes the twitch api before closing
-                Main.connection.chat.sendMessage(Main.config.Username,"TwitchPollBot is disconnecting");
-                Main.connection.chat.disconnect();
-                Main.connection.chat.close();
-                Main.connection.client.close();
+                if(connection == null) System.exit(0);
+                connection.chat.sendMessage(config.Username,"TwitchPollBot is disconnecting");
+                connection.chat.disconnect();
+                connection.chat.close();
+                connection.client.close();
                 System.exit(0);
             }
         });
+        Main.LOG.info("Setting Up Components");
         SetupComponents();
-        RNG = new Random();
         setResizable(false);
         setVisible(true);
-    }
-    //  Helper method that sets the bounds and calls the other 2 helpers
-    private void SetupComponents()
-    {
-        VoteList.setBounds(425,100,300,300);
-        votesLabel.setBounds(550,0,75,100);
-        nameLabel.setBounds(10,70,50,25);
-        NameField.setBounds(90,70,100,25);
-        AddOptionButton.setBounds(195,70,100,25);
-        durationLabel.setBounds(10,110,75,25);
-        DurationField.setBounds(90,110,100,25);
-        StartButton.setBounds(195,110,100,25);
-        ResetButton.setBounds(300,110,100,25);
-        remainingLabel.setBounds(85,150,75,25);
-        remainingSecondsLabel.setBounds(170,150,75,25);
-        Preset1.setBounds(10,190,100,25);
-        Preset2.setBounds(115,190,100,25);
-        Preset3.setBounds(220,190,100,25);
-        controlsLabel.setBounds(100,30,100,25);
-        randomLabel.setBounds(100,230,100,25);
-        randomMinLabel.setBounds(10,270,100,25);
-        randomMaxLabel.setBounds(10,310,40,25);
-        randomMaxField.setBounds(60,310,100,25);
-        RandomButton.setBounds(10,350,150,25);
-        HowTo.setBounds(200,350,200,25);
-        AddListeners();
-        AddComponents();
-    }
-    //  Helper method that adds all button action listeners
-    private void AddListeners(){
-        AddOptionButton.addActionListener(this);
-        StartButton.addActionListener(this);
-        ResetButton.addActionListener(this);
-        Preset1.addActionListener(this);
-        Preset2.addActionListener(this);
-        Preset3.addActionListener(this);
-        RandomButton.addActionListener(this);
-        HowTo.addActionListener(this);
-    }
-    //  Helper method that adds all components
-    private void AddComponents()
-    {
-        add(VoteList);
-        add(votesLabel);
-        add(nameLabel);
-        add(NameField);
-        add(AddOptionButton);
-        add(StartButton);
-        add(DurationField);
-        add(durationLabel);
-        add(remainingLabel);
-        add(remainingSecondsLabel);
-        add(ResetButton);
-        add(Preset1);
-        add(Preset2);
-        add(Preset3);
-        add(controlsLabel);
-        add(randomLabel);
-        add(randomMinLabel);
-        add(randomMaxLabel);
-        add(randomMaxField);
-        add(RandomButton);
-        add(HowTo);
+        Main.LOG.info("Loading Config");
+        config = new JsonConfig();
+        if(config.Username.equals("changeme")) {
+            Main.LOG.info("New Config, Loading ConfigPanel App Instead of PollPanel");
+            Main.LOG.info("No Twitch Connection Will Be Initiated Until Requested By ConfigPanel");
+            Poll.setEnabled(true);
+            Config.setEnabled(false);
+            MainApp.setVisible(false);
+            ConfigPanel.setVisible(true);
+            ConfigPanel.LoadConfig();
+        }
+        else {
+            Main.LOG.info("Starting Twitch API Connection");
+            connection = new Connection(this);
+        }
+        Main.LOG.info("Initiating Random Number Generator");
+        RNG = new Random();
+        Main.LOG.info("UI Initialized");
     }
 
+    @Override
+    public void doLayout() {
+        super.doLayout();
+
+    }
+
+    private void SetupComponents()
+    {
+        MainApp.setBounds(0,50,750,500);
+        ConfigPanel.setBounds(0,50,1150,450);
+        Poll.setBounds(50,0,100,25);
+        Config.setBounds(200,0,100,25);
+        add(MainApp);
+        add(Poll);
+        add(Config);
+        add(ConfigPanel);
+        Poll.addActionListener(this);
+        Config.addActionListener(this);
+    }
     //  Button Handler
     @Override
     public void actionPerformed(ActionEvent e)
     {
+        if(e.getSource().equals(Poll)){
+            ConfigPanel.setVisible(false);
+            MainApp.setVisible(true);
+            Config.setEnabled(true);
+            Poll.setEnabled(false);
+        }
+        else if(e.getSource().equals(Config)){
+            ConfigPanel.setVisible(true);
+            MainApp.setVisible(false);
+            Config.setEnabled(false);
+            Poll.setEnabled(true);
+            ConfigPanel.LoadConfig();
+        }
+        else if(e.getActionCommand().equals("Start Twitch API"))
+        {
+            Main.LOG.info("Twitch API Start Requested");
+            connection = new Connection(this);
+        }
         ActionManager.HandleAction(e);
     }
 
-    //  Timer Task responsible for the duration and handles the result fetching from the list
+    //Timer Task responsible for the duration and handles the result fetching from the list
     public static class TimerTick extends TimerTask
     {
 
@@ -155,13 +133,13 @@ public class Screen extends JFrame implements ActionListener
             if(Main.screen.Delay > 0)
             {
                 Main.screen.Delay--;
-                Main.screen.remainingSecondsLabel.setText(Main.screen.Delay + "s");
+                Main.screen.MainApp.remainingSecondsLabel.setText(Main.screen.Delay + "s");
             }
             else
             {
-                Main.connection.chat.sendMessage(Main.config.Username,"The Poll Has Ended\nThe Winning Option will be announced");
+                Main.screen.connection.chat.sendMessage(Main.screen.config.Username,"The Poll Has Ended\nThe Winning Option will be announced");
                 Main.screen.timer.cancel();
-                Main.screen.remainingSecondsLabel.setText("0s");
+                Main.screen.MainApp.remainingSecondsLabel.setText("0s");
                 Main.screen.VoteRunning = false;
                 VotesManager.FetchWinner();
                 Main.screen.timer = new Timer();
@@ -179,7 +157,7 @@ public class Screen extends JFrame implements ActionListener
             {
                 String Message = channelMessageEvent.getMessage();
                 String Username = channelMessageEvent.getUser().getName();
-                if(Message.toLowerCase().startsWith(Main.config.VotePrefix))
+                if(Message.toLowerCase().startsWith(Main.screen.config.VotePrefix))
                 {
                     VotesManager.vote_trigger(Message,Username);
                 }

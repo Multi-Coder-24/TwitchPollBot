@@ -15,22 +15,23 @@ public class Connection
     public TwitchClient client;
     public TwitchChat chat;
     //  Main Constructor
-    public Connection()
+    public Connection(Screen inst)
     {
         try{
             //  Creates the twitch bot Client using the provided values from config
-            client = TwitchClientBuilder.builder().withUserAgent("TwitchPollBot. By Multicoder").withChatAccount(new OAuth2Credential("twitch",Main.config.AccessToken)).withClientId(Main.config.ClientID).withEnableChat(true).build();
+            client = TwitchClientBuilder.builder().withUserAgent("TwitchPollBot. By Multicoder").withChatAccount(new OAuth2Credential("twitch",inst.config.AccessToken)).withClientId(inst.config.ClientID).withEnableChat(true).build();
             //  Gets the users twitch chat
             chat = client.getChat();
             //  Connects to the users twitch chat
             chat.connect();
             //  Sends a ready message in the twitch chat
-            chat.sendMessage(Main.config.Username,"TwitchPollBot Connected");
+            chat.sendMessage(inst.config.Username,"TwitchPollBot Connected");
             //  Adds the Message Handler from Screen into the twitch bot event manager
             chat.getEventManager().onEvent(ChannelMessageEvent.class, Screen.MessageEvents::ChatMessage);
         } catch (Exception e)
         {
-            JOptionPane.showMessageDialog(null,e.getMessage(),"Critical Error",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null,"Error Connecting Twitch API","Critical Error",JOptionPane.ERROR_MESSAGE);
+            Main.ERRLOG.error("Error Connecting Twitch API",e);
         }
 
     }
