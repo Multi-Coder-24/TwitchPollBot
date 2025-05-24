@@ -1,5 +1,7 @@
 package org.multicoder.pollbot;
 
+import org.multicoder.pollbot.config.JsonConfig;
+import org.multicoder.pollbot.gui.ConfigScreen;
 import org.multicoder.pollbot.gui.Screen;
 import org.multicoder.pollbot.twitch.Connection;
 import org.multicoder.pollbot.util.*;
@@ -24,18 +26,7 @@ public class Main
         try
         {
             Runtime rt = Runtime.getRuntime();
-            rt.addShutdownHook(new Thread(() ->
-            {
-                File CD = new File("");
-                File[] Files = CD.getAbsoluteFile().listFiles();
-                if(Files != null){
-                    for(File file : Files){
-                        if(file.isFile() && file.length() == 0) {
-                            file.getAbsoluteFile().deleteOnExit();
-                        }
-                    }
-                }
-            }));
+            rt.addShutdownHook(new Thread(() -> {File CD = new File("");File[] Files = CD.getAbsoluteFile().listFiles();if(Files != null){for(File file : Files){if(file.isFile() && file.length() == 0) file.getAbsoluteFile().deleteOnExit();}}}));
             LOG.info("Twitch Poll Bot Started");
             LOG.info("Running Version Check");
             //  Version check against github releases
@@ -51,9 +42,9 @@ public class Main
             LOG.info("Checking For Un-configured File");
             if(config.Username.equals("changeme"))
             {
-                LOG.info("Un-configured File, Please edit " + System.getProperty("user.home") + "\\pollbot.json");
+                LOG.info("Un-configured File, Loading Config Edit Screen");
                 System.out.println("First Run or Old Version Detected. Please Edit Config");
-                System.exit(0);
+                new ConfigScreen();
             }
             else
             {
@@ -62,6 +53,7 @@ public class Main
                 connection = new Connection();
                 //  Launches the main app gui
                 LOG.info("Launching The UI");
+
                 screen = new Screen();
             }
         } catch (Exception e)
@@ -69,6 +61,5 @@ public class Main
             JOptionPane.showMessageDialog(null,e.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
             ERRLOG.error("Unknown Error Has Occured",e);
         }
-
     }
 }

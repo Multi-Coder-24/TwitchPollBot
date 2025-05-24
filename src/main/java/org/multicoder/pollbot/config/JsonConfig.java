@@ -1,4 +1,4 @@
-package org.multicoder.pollbot.util;
+package org.multicoder.pollbot.config;
 
 import com.google.gson.*;
 import org.multicoder.pollbot.Main;
@@ -49,7 +49,14 @@ public class JsonConfig
                     gson.toJson(Root,fw);
                 }
                 JOptionPane.showMessageDialog(null,"New Blank Configuration Created\nPlease edit the file located at: " + ConfigFile.getAbsolutePath(),"New Config",JOptionPane.INFORMATION_MESSAGE);
-                throw new RuntimeException("New Config");
+                Username = "changeme";
+                ClientID = "changeme";
+                AccessToken = "changeme";
+                VotePrefix = "!vote";
+                PollCommandPrefix = "!poll";
+                Preset_1 = PresetConst;
+                Preset_2 = PresetConst;
+                Preset_3 = PresetConst;
             }
             else
             {
@@ -79,6 +86,33 @@ public class JsonConfig
         } catch (Exception e)
         {
             Main.ERRLOG.error("Unknown Config Error",e);
+        }
+    }
+
+    public void UpdateConfig() throws IOException {
+        File ConfigFile = new File(System.getProperty("user.home") + "\\pollbot.json");
+        JsonObject Root = new JsonObject();
+        JsonObject TwitchConfig = new JsonObject();
+        JsonObject PollBotConfig = new JsonObject();
+        JsonArray DefaultPreset = new JsonArray();
+        TwitchConfig.addProperty("Username",Username);
+        TwitchConfig.addProperty("ClientID",ClientID);
+        TwitchConfig.addProperty("AccessToken",AccessToken);
+        PollBotConfig.addProperty("VotePrefix",VotePrefix);
+        PollBotConfig.addProperty("PollCommandPrefix",PollCommandPrefix);
+        for(String option : Preset_1) DefaultPreset.add(option);
+        PollBotConfig.add("Preset_1",DefaultPreset);
+        DefaultPreset = new JsonArray();
+        for(String option : Preset_2) DefaultPreset.add(option);
+        PollBotConfig.add("Preset_2",DefaultPreset);
+        DefaultPreset = new JsonArray();
+        for(String option : Preset_3) DefaultPreset.add(option);
+        PollBotConfig.add("Preset_3",DefaultPreset);
+        Root.add("TwitchConfig", TwitchConfig);
+        Root.add("PollBotConfig", PollBotConfig);
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        try (FileWriter fw = new FileWriter(ConfigFile)) {
+            gson.toJson(Root,fw);
         }
     }
 }
