@@ -1,4 +1,4 @@
-package org.multicoder.pollbot.twitch;
+package org.multicoder.pollbot.util;
 
 import org.multicoder.pollbot.Main;
 
@@ -10,6 +10,12 @@ public class VotesManager
     public static List<String> Voted_Users = new ArrayList<>();
     public static List<String> Options = new ArrayList<>();
     public static List<Integer> Votes = new ArrayList<>();
+
+    public static void AddOption(String option)
+    {
+        Options.add(option);
+    }
+
 
     public static void vote_trigger(String message, String Username)
     {
@@ -25,7 +31,7 @@ public class VotesManager
         {
             try{
                 String Option = message.split(" ",2)[1];
-                int Index = Options.indexOf(Option.toLowerCase(Locale.ROOT));
+                int Index = Options.indexOf(Option.toLowerCase());
                 if(Index != -1)
                 {
                     System.out.println(Option);
@@ -56,7 +62,7 @@ public class VotesManager
     {
 
         DefaultListModel<String> model = Main.screen.MainApp.Votes;
-        String Message = model.get(Selection - 1).split(",")[0];
+        String Message = model.get(Selection).split(",")[0];
         Message += ", " + Value;
         model.setElementAt(Message,Selection);
     }

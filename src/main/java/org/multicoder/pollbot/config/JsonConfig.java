@@ -11,6 +11,7 @@ public class JsonConfig
     public String Username;
     public String ClientID;
     public String AccessToken;
+    public String BroadcasterID;
 
     public String VotePrefix;
     public String PollCommandPrefix;
@@ -36,6 +37,7 @@ public class JsonConfig
                 TwitchConfig.addProperty("Username", "changeme");
                 TwitchConfig.addProperty("ClientID", "changeme");
                 TwitchConfig.addProperty("AccessToken", "changeme");
+                TwitchConfig.addProperty("BroadcasterID", "changeme");
                 PollBotConfig.addProperty("VotePrefix", "!vote");
                 PollBotConfig.addProperty("PollCommandPrefix", "!poll");
                 PollBotConfig.add("Preset_1",DefaultPreset);
@@ -50,6 +52,7 @@ public class JsonConfig
                 Username = "changeme";
                 ClientID = "changeme";
                 AccessToken = "changeme";
+                BroadcasterID = "changeme";
                 VotePrefix = "!vote";
                 PollCommandPrefix = "!poll";
                 Preset_1 = PresetConst;
@@ -65,6 +68,7 @@ public class JsonConfig
                 Username = TwitchConfig.get("Username").getAsString();
                 ClientID = TwitchConfig.get("ClientID").getAsString();
                 AccessToken = TwitchConfig.get("AccessToken").getAsString();
+                BroadcasterID = TwitchConfig.get("BroadcasterID").getAsString();
                 VotePrefix = PollBotConfig.get("VotePrefix").getAsString();
                 PollCommandPrefix = PollBotConfig.get("PollCommandPrefix").getAsString();
                 List<JsonElement> Preset1Json = PollBotConfig.getAsJsonArray("Preset_1").asList();
@@ -96,6 +100,7 @@ public class JsonConfig
         TwitchConfig.addProperty("Username",Username);
         TwitchConfig.addProperty("ClientID",ClientID);
         TwitchConfig.addProperty("AccessToken",AccessToken);
+        TwitchConfig.addProperty("BroadcasterID",BroadcasterID);
         PollBotConfig.addProperty("VotePrefix",VotePrefix);
         PollBotConfig.addProperty("PollCommandPrefix",PollCommandPrefix);
         for(String option : Preset_1) DefaultPreset.add(option);

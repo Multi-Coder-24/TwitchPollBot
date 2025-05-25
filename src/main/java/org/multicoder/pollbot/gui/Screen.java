@@ -4,7 +4,8 @@ import com.github.twitch4j.chat.events.channel.ChannelMessageEvent;
 import org.multicoder.pollbot.Main;
 import org.multicoder.pollbot.config.JsonConfig;
 import org.multicoder.pollbot.twitch.Connection;
-import org.multicoder.pollbot.twitch.VotesManager;
+import org.multicoder.pollbot.twitch.CommandManager;
+import org.multicoder.pollbot.util.VotesManager;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -40,7 +41,7 @@ public class Screen extends JFrame implements ActionListener
         setSize(1150,500);
         setLayout(null);
         setFont(new Font("Arial",Font.PLAIN,16));
-        Main.LOG.info("Adding Shutdown Hook");
+        Main.LOG.info("Add Screen Close Hook");
         addWindowListener(new WindowAdapter()
         {
             @Override public void windowClosing(WindowEvent e)
@@ -49,10 +50,18 @@ public class Screen extends JFrame implements ActionListener
                 //  Closes the twitch api before closing
                 if(connection == null) System.exit(0);
                 connection.chat.sendMessage(config.Username,"TwitchPollBot is disconnecting");
+                try {Thread.sleep(200);} catch (InterruptedException ignored) {}
                 connection.chat.disconnect();
                 connection.chat.close();
                 connection.client.close();
                 System.exit(0);
+            }
+
+            @Override
+            public void windowGainedFocus(WindowEvent e)
+            {
+                super.windowGainedFocus(e);
+                validate();
             }
         });
         Main.LOG.info("Setting Up Components");
@@ -70,19 +79,15 @@ public class Screen extends JFrame implements ActionListener
             ConfigPanel.setVisible(true);
             ConfigPanel.LoadConfig();
         }
-        else {
+        else
+        {
             Main.LOG.info("Starting Twitch API Connection");
+            Poll.setEnabled(false);
             connection = new Connection(this);
         }
         Main.LOG.info("Initiating Random Number Generator");
         RNG = new Random();
         Main.LOG.info("UI Initialized");
-    }
-
-    @Override
-    public void doLayout() {
-        super.doLayout();
-
     }
 
     private void SetupComponents()
@@ -160,6 +165,16 @@ public class Screen extends JFrame implements ActionListener
                 if(Message.toLowerCase().startsWith(Main.screen.config.VotePrefix))
                 {
                     VotesManager.vote_trigger(Message,Username);
+                }
+                else if(Message.toLowerCase().startsWith(Main.screen.config.PollCommandPrefix)){
+                    CommandManager.HandleCommand(Username,Message);
+                }
+            }
+            else{
+                String Message = channelMessageEvent.getMessage();
+                String Username = channelMessageEvent.getUser().getName();
+                if(Message.toLowerCase().startsWith(Main.screen.config.PollCommandPrefix)) {
+                    CommandManager.HandleCommand(Username,Message);
                 }
             }
         }

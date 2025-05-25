@@ -1,7 +1,7 @@
 package org.multicoder.pollbot.gui;
 
 import org.multicoder.pollbot.Main;
-import org.multicoder.pollbot.twitch.VotesManager;
+import org.multicoder.pollbot.util.VotesManager;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -57,6 +57,7 @@ public class ActionManager
                     model1.addElement(Option + ", 0");
                     VotesManager.Votes.add(0);
                     VotesManager.Options.add(Option.toLowerCase());
+                    Main.screen.validate();
                 }
                 break;
             //  Loads Preset2 from the config and populates votes list
@@ -68,6 +69,7 @@ public class ActionManager
                     model2.addElement(Option + ", 0");
                     VotesManager.Votes.add(0);
                     VotesManager.Options.add(Option.toLowerCase());
+                    Main.screen.validate();
                 }
                 break;
             //  Loads Preset3 from the config and populates votes list
@@ -79,6 +81,7 @@ public class ActionManager
                     model3.addElement(Option + ", 0");
                     VotesManager.Votes.add(0);
                     VotesManager.Options.add(Option.toLowerCase());
+                    Main.screen.validate();
                 }
                 break;
             case "Generate Random":

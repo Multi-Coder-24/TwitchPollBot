@@ -13,7 +13,6 @@ repositories {
 
 dependencies {
     implementation("com.github.twitch4j:twitch4j:1.24.0")
-    implementation("commons-configuration:commons-configuration:20030311.152757")
     implementation("ch.qos.logback:logback-classic:1.5.13")
     implementation("com.electronwill.night-config:toml:3.6.6")
     implementation("org.jsoup:jsoup:1.20.1")

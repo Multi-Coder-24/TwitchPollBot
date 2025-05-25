@@ -13,11 +13,13 @@ public class ConfigPanel extends JPanel implements ActionListener
     JPasswordField AccessToken = new JPasswordField();
     JTextField Username = new JTextField();
     JTextField ClientId = new JTextField();
+    JTextField BroadcasterId = new JTextField();
     JTextField VotePrefix = new JTextField();
     JTextField PollCommandPrefix = new JTextField();
     JLabel AccessTokenLabel = new JLabel("Access Token");
     JLabel UsernameLabel = new JLabel("Username");
     JLabel ClientIDLabel = new JLabel("Client ID");
+    JLabel BroadcasterIDLabel = new JLabel("Broadcaster ID");
     JLabel VotePrefixLabel = new JLabel("Vote Prefix");
     JLabel PollCommandPrefixLabel = new JLabel("Command Prefix");
     JLabel Preset1Label = new JLabel("Preset 1");
@@ -48,18 +50,20 @@ public class ConfigPanel extends JPanel implements ActionListener
         AccessToken.setBounds(120,100,200,25);
         AccessTokenLabel.setBounds(10,100,100,25);
         ShowToken.setBounds(330,100,150,25);
-        VotePrefix.setBounds(120,150,100,25);
-        VotePrefixLabel.setBounds(10,150,100,25);
-        PollCommandPrefix.setBounds(120,200,100,25);
-        PollCommandPrefixLabel.setBounds(10,200,100,25);
+        BroadcasterId.setBounds(120,150,200,25);
+        BroadcasterIDLabel.setBounds(10,150,200,25);
+        VotePrefix.setBounds(120,200,100,25);
+        VotePrefixLabel.setBounds(10,200,100,25);
+        PollCommandPrefix.setBounds(120,250,100,25);
+        PollCommandPrefixLabel.setBounds(10,250,100,25);
         Preset1.setBounds(500,50,200,280);
         Preset1Label.setBounds(550,10,150,25);
         Preset2.setBounds(710,50,200,280);
         Preset2Label.setBounds(760,10,150,25);
         Preset3.setBounds(920,50,200,280);
         Preset3Label.setBounds(960,10,150,25);
-        Save.setBounds(10,250,100,50);
-        StartConnection.setBounds(150,250,200,50);
+        Save.setBounds(10,300,100,50);
+        StartConnection.setBounds(150,300,200,50);
         AddListeners();
         AddComponents();
     }
@@ -72,6 +76,7 @@ public class ConfigPanel extends JPanel implements ActionListener
         VotePrefix.setText(Config.VotePrefix);
         PollCommandPrefix.setText(Config.PollCommandPrefix);
         AccessToken.setText(Config.AccessToken);
+        BroadcasterId.setText(Config.BroadcasterID);
         StringBuilder PresetBuilder = new StringBuilder();
         for(String option : Config.Preset_1) PresetBuilder.append(option).append("\n");
         Preset1.setText(PresetBuilder.toString());
@@ -99,6 +104,8 @@ public class ConfigPanel extends JPanel implements ActionListener
         add(AccessToken);
         add(AccessTokenLabel);
         add(ShowToken);
+        add(BroadcasterIDLabel);
+        add(BroadcasterId);
         add(VotePrefix);
         add(VotePrefixLabel);
         add(PollCommandPrefix);
@@ -119,6 +126,7 @@ public class ConfigPanel extends JPanel implements ActionListener
         Config.ClientID = ClientId.getText();
         Config.VotePrefix = VotePrefix.getText();
         Config.PollCommandPrefix = PollCommandPrefix.getText();
+        Config.BroadcasterID = BroadcasterId.getText();
         char[] AccessTokenChar = AccessToken.getPassword();
         StringBuilder AccessTokenBuilder = new StringBuilder();
         for(char c : AccessTokenChar) AccessTokenBuilder.append(c);
