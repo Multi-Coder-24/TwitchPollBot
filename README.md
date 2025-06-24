@@ -5,3 +5,4 @@ This app will work on any OS that you may use, excluding Mobile phones.
 Please see the Wiki for the setup and usage guide
 
 ## This application has been re-created with a new name and is now a python application
+### [Updated App](https://github.com/Multi-Coder-24/JTPoll)
